@@ -1,0 +1,16 @@
+BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: 'New Request',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.inbox),
+            label: 'In Progress',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'History',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: 'Add Ambulance',
+          ),
