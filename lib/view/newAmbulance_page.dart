@@ -15,28 +15,19 @@ class _AddAmbulancePageState extends State<AddAmbulancePage> {
   final _formKey = GlobalKey<FormState>();
 
   String? driverName;
-  String? vehicleType;
-  String? paramedicAvailability;
+  String? licenseNumber;
   String? vehiclePlateNumber;
   String? contactNumber;
-  String? insuranceDocuments;
-  String? licenseNumber;
   String? dateOfBirth;
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // ElevatedButton(
-            //   onPressed: () {
-            //     Navigator.pushNamed(context, RouteNames.addAmbulancePage);
-            //   },
-            //   child: Text("new request page updated"),
-            // ),
             addVerticalSpace(30),
             Padding(
               padding: const EdgeInsets.all(25.0),
@@ -54,7 +45,7 @@ class _AddAmbulancePageState extends State<AddAmbulancePage> {
               child: Column(
                 children: [
                   Container(
-                      width: width,
+                      width: _width,
                       decoration: BoxDecoration(
                           border: Border.all(width: 2),
                           borderRadius: BorderRadius.circular(25)),
@@ -86,19 +77,7 @@ class _AddAmbulancePageState extends State<AddAmbulancePage> {
                                       }
                                       return null;
                                     },
-                                    onSaved: (value) => vehicleType = value,
-                                  ),
-                                  TextFormField(
-                                    decoration: InputDecoration(
-                                        labelText: 'Paramedic Availability'),
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Please enter the paramedic availability';
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) =>
-                                        paramedicAvailability = value,
+                                    onSaved: (value) => licenseNumber = value,
                                   ),
                                   TextFormField(
                                     decoration: InputDecoration(
@@ -125,20 +104,7 @@ class _AddAmbulancePageState extends State<AddAmbulancePage> {
                                     onSaved: (value) => contactNumber = value,
                                   ),
                                   TextFormField(
-                                    decoration: InputDecoration(
-                                        labelText:
-                                            'Vehicle Insurance Documents'),
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Please enter the vehicle insurance documents';
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) =>
-                                        insuranceDocuments = value,
-                                  ),
-                                  TextFormField(
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                         labelText: 'License Number'),
                                     validator: (value) {
                                       if (value!.isEmpty) {
@@ -149,7 +115,7 @@ class _AddAmbulancePageState extends State<AddAmbulancePage> {
                                     onSaved: (value) => licenseNumber = value,
                                   ),
                                   TextFormField(
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                         labelText: 'Date of Birth'),
                                     validator: (value) {
                                       if (value!.isEmpty) {
@@ -167,7 +133,7 @@ class _AddAmbulancePageState extends State<AddAmbulancePage> {
                                         // do something with the saved data
                                       }
                                     },
-                                    child: Text('Submit'),
+                                    child: const Text('Submit'),
                                   ),
                                 ],
                               ),

@@ -6,4 +6,5 @@ class RouteNames {
   static const String addAmbulancePage = "AddAmbulance_page";
   static const String managementPage = "Management_page";
   static const String policePage = "police_page";
+  static const String loginPage = "login_page";
 }

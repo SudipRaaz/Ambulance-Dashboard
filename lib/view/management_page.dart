@@ -91,8 +91,13 @@ class _ManagementPageState extends State<ManagementPage> {
                     employees.length,
                     (index) => DataRow(
                           cells: <DataCell>[
-                            DataCell(Text(employees[index]['driverName'])),
-                            DataCell(Text(employees[index]['driverLicense'])),
+                            DataCell(SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                child: Text(employees[index]['driverName']))),
+                            DataCell(SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child:
+                                    Text(employees[index]['driverLicense']))),
                             DataCell(Text(employees[index]['driverContact'])),
                             DataCell(Text(employees[index]['driverAddress'])),
                             DataCell(Text(employees[index]['vehicleNumber'])),

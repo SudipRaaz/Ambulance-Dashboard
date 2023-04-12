@@ -1,6 +1,7 @@
 import 'package:ambulance_dashboard/utilities/route/routes.dart';
 import 'package:ambulance_dashboard/view/history_page.dart';
 import 'package:ambulance_dashboard/view/inprogress_page.dart';
+import 'package:ambulance_dashboard/view/login.dart';
 import 'package:ambulance_dashboard/view/management_page.dart';
 import 'package:ambulance_dashboard/view/newAmbulance_page.dart';
 import 'package:ambulance_dashboard/view/police_page.dart';
@@ -45,6 +46,11 @@ class Routes {
       case RouteNames.policePage:
         return MaterialPageRoute(builder: (context) {
           return PolicePage();
+        });
+
+      case RouteNames.loginPage:
+        return MaterialPageRoute(builder: (context) {
+          return LoginPage();
         });
 
       default:

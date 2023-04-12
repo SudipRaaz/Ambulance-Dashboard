@@ -31,7 +31,15 @@ dependencies:
   flutter:
     sdk: flutter
 
+  validators: ^3.0.0  # regex validation checker
   provider: ^6.0.5 #state management
+  fluttertoast: ^8.1.1  # message carrier
+  another_flushbar: ^1.12.29  # message carrier
+
+  #database
+  firebase_core: ^2.6.1 # core connection to firebase 
+  cloud_firestore: ^4.4.2 # cloud storage for data
+  firebase_auth: ^4.2.8 # authentication
 
 
   # The following adds the Cupertino Icons font to your application.
