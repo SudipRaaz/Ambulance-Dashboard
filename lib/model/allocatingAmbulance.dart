@@ -15,6 +15,7 @@ String allocatingStaffToJson(AllocatingAmbulance data) =>
 class AllocatingAmbulance {
   AllocatingAmbulance({
     required this.status,
+    required this.caseID,
     required this.allotedAt,
     required this.ambulanceAllotedId,
     required this.ambulanceLocation,
@@ -23,6 +24,7 @@ class AllocatingAmbulance {
   });
 
   String status;
+  int caseID;
   DateTime allotedAt;
   String ambulanceAllotedId;
   GeoPoint ambulanceLocation;
@@ -31,16 +33,18 @@ class AllocatingAmbulance {
 
   factory AllocatingAmbulance.fromJson(Map<String, dynamic> json) =>
       AllocatingAmbulance(
+        caseID: json["caseID"] as int,
         status: json["Status"],
-        allotedAt: json["allotedAt"],
+        allotedAt: json["allotedAt"] as DateTime,
         ambulanceAllotedId: json["ambulanceAllotedID"],
-        ambulanceLocation: json["ambulanceLocation"],
-        ambulanceServiceAlloted: json["ambulanceServiceAlloted"],
+        ambulanceLocation: json["ambulanceLocation"] as GeoPoint,
+        ambulanceServiceAlloted: json["ambulanceServiceAlloted"] as bool,
         responseMessage: json["responseMessage"],
       );
 
   Map<String, dynamic> toJson() => {
         "Status": status,
+        "caseID": caseID,
         "allotedAt": allotedAt,
         "ambulanceAllotedID": ambulanceAllotedId,
         "ambulanceLocation": ambulanceLocation,

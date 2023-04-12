@@ -1,16 +1,17 @@
 import 'dart:developer';
 
 import 'package:ambulance_dashboard/model/staff_data.dart';
+import 'package:ambulance_dashboard/view/newRequest_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class GetAvailableStaff extends StatefulWidget {
-  final void Function(String) selectedOption;
+  MyCallback callbackClass;
 
   GetAvailableStaff({
     super.key,
-    required this.selectedOption,
+    required this.callbackClass,
   });
 
   @override
@@ -63,14 +64,21 @@ class Get_AvailableStaffState extends State<GetAvailableStaff> {
                       selectedOption = newValue;
                     });
 
-                    for (var i = 0; i < availableStaff.length; i++) {
-                      if (availableStaff[i]['PhoneNumber'] == selectedOption) {
+                    for (int i = 0; i < availableStaff.length; i++) {
+                      if (availableStaff[i]['PhoneNumber'].toString() ==
+                          selectedOption) {
                         // staffProvider.setStaffID(availableStaff[i]['UID']);
                         staffID = availableStaff[i]['UID'];
                         StaffLocation = availableStaff[i]['Location'];
-                        widget.selectedOption(newValue);
-                        log('${availableStaff[i]['Location']},  ${availableStaff[i]['UID']}}');
+
+                        // making sure data is not null
+                        if (staffID != null && StaffLocation != null) {
+                          widget.callbackClass(
+                              newValue, staffID!, StaffLocation!);
+                        }
                       }
+
+                      log('from available staff class : ${availableStaff[i]['Location']},  ${availableStaff[i]['UID']}}');
                     }
                   }
                 },

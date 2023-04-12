@@ -13,11 +13,26 @@ class MyCloudStore extends MyCloudStoreBase {
     DateTime time = DateTime.now();
     final ambulanceDepartmentUpdate = AllocatingAmbulance(
         status: allocationData.status,
+        caseID: allocationData.caseID,
         allotedAt: allocationData.allotedAt,
         ambulanceAllotedId: allocationData.ambulanceAllotedId,
         ambulanceLocation: allocationData.ambulanceLocation,
         ambulanceServiceAlloted: allocationData.ambulanceServiceAlloted,
         responseMessage: allocationData.responseMessage);
+
+    // updating user's request
+    FirebaseFirestore.instance
+        .collection('CustomerRequests')
+        .where('caseID', isEqualTo: allocationData.caseID)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        FirebaseFirestore.instance
+            .collection('CustomerRequests')
+            .doc(doc.id)
+            .update(ambulanceDepartmentUpdate.toJson());
+      });
+    });
 
     // wating for doc set josn object on firebase
     await ambulanceDepartmentDatabaseReference
