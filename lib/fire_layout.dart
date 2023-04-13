@@ -6,21 +6,21 @@ import 'package:provider/provider.dart';
 import 'model/tab_manager.dart';
 import 'utilities/constant/pages.dart';
 
-class PageLayout extends StatefulWidget {
-  const PageLayout({super.key});
+class FireBrigadeLayout extends StatefulWidget {
+  const FireBrigadeLayout({super.key});
 
   @override
-  State<PageLayout> createState() => _PageLayoutState();
+  State<FireBrigadeLayout> createState() => _FireBrigadeLayoutState();
 }
 
-class _PageLayoutState extends State<PageLayout> {
+class _FireBrigadeLayoutState extends State<FireBrigadeLayout> {
   @override
   Widget build(BuildContext context) {
-    List<Widget> pages = MyPagesList().pages;
+    List<Widget> pages = MyPagesList().fireBrigadepages;
     return Consumer<TabManager>(builder: (context, tabManager, child) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Adminstrative Dashboard"),
+          title: const Text("Fire Brigade Dashboard"),
           centerTitle: true,
           actions: [
             ElevatedButton(
@@ -54,10 +54,6 @@ class _PageLayoutState extends State<PageLayout> {
                 NavigationRailDestination(
                   icon: Icon(Icons.history),
                   label: Text('History'),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.add),
-                  label: Text('Add Staff'),
                 ),
                 NavigationRailDestination(
                   icon: Icon(Icons.group_rounded),

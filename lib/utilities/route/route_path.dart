@@ -1,3 +1,4 @@
+import 'package:ambulance_dashboard/delegator.dart';
 import 'package:ambulance_dashboard/utilities/route/routes.dart';
 import 'package:ambulance_dashboard/view/history_page.dart';
 import 'package:ambulance_dashboard/view/inprogress_page.dart';
@@ -8,19 +9,18 @@ import 'package:ambulance_dashboard/view/police_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../view/newRequest_page.dart';
-import '../../page_layout.dart';
 
 class Routes {
   static Route<dynamic> generateRoutes(RouteSettings settings) {
     switch (settings.name) {
-      case RouteNames.pageLayout:
+      case RouteNames.delegator:
         return MaterialPageRoute(builder: (context) {
-          return PageLayout();
+          return Delegator();
         });
 
       case RouteNames.newRequestPage:
         return MaterialPageRoute(builder: (context) {
-          return NewRequestPage();
+          return NewRequestHome();
         });
 
       case RouteNames.inProgressPage:
