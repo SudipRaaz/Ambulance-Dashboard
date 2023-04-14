@@ -25,7 +25,7 @@ class Authentication extends AuthenticationBase {
       Message.flutterToast(context, error.message.toString());
       // catch any exceptions occured and display
     } catch (error) {
-      Message.flushBarErrorMessage(context, '$error');
+      Message.flutterToast(context, '$error');
     }
   }
 

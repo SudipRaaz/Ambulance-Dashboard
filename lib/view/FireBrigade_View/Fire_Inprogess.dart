@@ -1,3 +1,6 @@
+import 'package:ambulance_dashboard/Controller/cloud_firestore.dart';
+import 'package:ambulance_dashboard/Controller/cloud_firestore_base.dart';
+import 'package:ambulance_dashboard/utilities/InfoDisp/message.dart';
 import 'package:ambulance_dashboard/utilities/constant/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -125,7 +128,15 @@ class FireInProgress extends StatelessWidget {
           Container(
             width: width,
             decoration: BoxDecoration(
-                border: Border.all(width: 2),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 228, 252, 94).withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3),
+                  ),
+                ],
                 borderRadius: BorderRadius.circular(25)),
             child: Padding(
               padding: const EdgeInsets.all(15),
@@ -179,7 +190,22 @@ Location:
                       Text(respondedMessage),
                       addVerticalSpace(20),
                       ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            try {
+                              MyCloudStoreBase obj = MyCloudStore();
+                              obj
+                                  .statusUpdate(
+                                      'FireBrigadeDepartment',
+                                      newRequests[index]['documentID'],
+                                      newRequests[index]['caseID'],
+                                      'Status',
+                                      'Completed')
+                                  .then((value) => Message.flutterToast(
+                                      context, "Marked as Completed"));
+                            } catch (e) {
+                              Message.flutterToast(context, 'Error ');
+                            }
+                          },
                           child: const Text('Mark as Completed')),
                     ],
                   ),

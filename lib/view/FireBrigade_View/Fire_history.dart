@@ -2,8 +2,6 @@ import 'package:ambulance_dashboard/utilities/constant/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-typedef MyCallback = Function(String option, String id, GeoPoint location);
-
 // ignore: must_be_immutable
 class FireHistory extends StatelessWidget {
   FireHistory({super.key});
@@ -23,7 +21,7 @@ class FireHistory extends StatelessWidget {
 
     // getting user requests
     final _requestStream = FirebaseFirestore.instance
-        .collection('AmbulanceDepartment')
+        .collection('FireBrigadeDepartment')
         .where('Status', isEqualTo: 'Completed')
         .snapshots();
 
@@ -81,7 +79,7 @@ class FireHistory extends StatelessWidget {
                     final customerLocation =
                         newRequests[index]['userLocation'] as GeoPoint;
                     final assignedStaffLocation =
-                        newRequests[index]['ambulanceLocation'] as GeoPoint;
+                        newRequests[index]['fireBrigadeLocation'] as GeoPoint;
                     final respondedMessage =
                         newRequests[index]['responseMessage'];
 
@@ -125,7 +123,16 @@ class FireHistory extends StatelessWidget {
           Container(
             width: width,
             decoration: BoxDecoration(
-                border: Border.all(width: 2),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 125, 252, 94).withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+                // border: Border.all(width: 2),
                 borderRadius: BorderRadius.circular(25)),
             child: Padding(
               padding: const EdgeInsets.all(15),

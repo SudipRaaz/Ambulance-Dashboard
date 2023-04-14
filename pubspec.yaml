@@ -35,7 +35,9 @@ dependencies:
   provider: ^6.0.5 #state management
   fluttertoast: ^8.1.1  # message carrier
   another_flushbar: ^1.12.29  # message carrier
-
+  google_maps_flutter: ^2.2.5
+  google_maps_flutter_web: ^0.4.0+7
+  
   #database
   firebase_core: ^2.6.1 # core connection to firebase 
   cloud_firestore: ^4.4.2 # cloud storage for data

@@ -125,7 +125,15 @@ class AmbuHistory extends StatelessWidget {
           Container(
             width: width,
             decoration: BoxDecoration(
-                border: Border.all(width: 2),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 125, 252, 94).withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3),
+                  ),
+                ],
                 borderRadius: BorderRadius.circular(25)),
             child: Padding(
               padding: const EdgeInsets.all(15),

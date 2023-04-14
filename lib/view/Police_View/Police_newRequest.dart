@@ -109,7 +109,15 @@ class PoliceNewRequests extends StatelessWidget {
           Container(
             width: width,
             decoration: BoxDecoration(
-                border: Border.all(width: 2),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromARGB(255, 252, 94, 94).withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3),
+                  ),
+                ],
                 borderRadius: BorderRadius.circular(25)),
             child: Padding(
               padding: const EdgeInsets.all(15),
@@ -193,7 +201,7 @@ Message: ${newRequests[index]['message']}
                                         context,
                                         'Staff Assigned Successfully'));
                               } else {
-                                Message.flushBarErrorMessage(
+                                Message.flutterToast(
                                     context, 'Could not retrive staff UID');
                               }
                             }

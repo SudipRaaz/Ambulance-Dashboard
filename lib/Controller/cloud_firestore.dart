@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ambulance_dashboard/model/FireBrigade_model.dart';
 import 'package:ambulance_dashboard/model/allocatingAmbulance.dart';
 import 'package:ambulance_dashboard/model/police_model.dart';
@@ -12,7 +14,6 @@ class MyCloudStore extends MyCloudStoreBase {
     final ambulanceDepartmentDatabaseReference = FirebaseFirestore.instance
         .collection('AmbulanceDepartment')
         .doc(documentID);
-    DateTime time = DateTime.now();
     final ambulanceDepartmentUpdate = AllocatingAmbulance(
         status: allocationData.status,
         caseID: allocationData.caseID,
@@ -109,5 +110,43 @@ class MyCloudStore extends MyCloudStoreBase {
     // wating for doc set josn object on firebase
     await ambulanceDepartmentDatabaseReference
         .update(ambulanceDepartmentUpdate.toJson());
+  }
+
+  @override
+  Future statusUpdate(String departmentName, String DocID, int caseID,
+      String field, String value) async {
+    // field update map models
+    Map<String, String> fireStatus = {field: value};
+
+    final databaseReference =
+        FirebaseFirestore.instance.collection(departmentName).doc(DocID);
+    // updating user's request
+    FirebaseFirestore.instance
+        .collection('CustomerRequests')
+        .where('caseID', isEqualTo: caseID)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        FirebaseFirestore.instance
+            .collection('CustomerRequests')
+            .doc(doc.id)
+            .update(fireStatus);
+      });
+    });
+
+    // wating for doc set json object on firebase
+    await databaseReference.update(fireStatus);
+  }
+
+  @override
+  Future userAccessUpdate(
+      String departmentName, String DocID, String field, bool value) async {
+    // field update map models
+    Map<String, bool> fireStatus = {field: value};
+
+    final databaseReference =
+        FirebaseFirestore.instance.collection(departmentName).doc(DocID);
+    // wating for doc set json object on firebase
+    await databaseReference.update(fireStatus);
   }
 }

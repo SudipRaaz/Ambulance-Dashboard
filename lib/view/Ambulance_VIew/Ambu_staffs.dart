@@ -1,5 +1,13 @@
+import 'dart:developer';
+
+import 'package:ambulance_dashboard/Controller/cloud_firestore.dart';
+import 'package:ambulance_dashboard/Controller/cloud_firestore_base.dart';
+import 'package:ambulance_dashboard/utilities/InfoDisp/message.dart';
+import 'package:ambulance_dashboard/view/Ambulance_VIew/Ambu_Staff_Map.dart';
+import 'package:ambulance_dashboard/view/Ambulance_VIew/Ambulance_StaffLoc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AmbuStaffs extends StatefulWidget {
   const AmbuStaffs({super.key});
@@ -9,56 +17,31 @@ class AmbuStaffs extends StatefulWidget {
 }
 
 class _AmbuStaffsState extends State<AmbuStaffs> {
-  List<Map<String, dynamic>> staffData = [
-    {
-      'driverName': 'John Doe John Doe John Doe John Doe John Doe John Doe ',
-      'driverLicense': 'JJohn Doe John Doe John Doe John Doe',
-      'driverContact': 'JJohn Doe John Doe John Doe John Doe',
-      'driverAddress': '1JJohn Doe John Doe John Doe John Doe.',
-      'vehicleNumber': 'AJohn Doe John Doe John Doe John Doe',
-    },
-    {
-      'driverName': 'Jane Doe',
-      'driverLicense': '654321',
-      'driverContact': '555-555-5555',
-      'driverAddress': '456 Elm St.',
-      'vehicleNumber': 'DEF456',
-    },
-    {
-      'driverName': 'Jane Doe',
-      'driverLicense': '654321',
-      'driverContact': '555-555-5555',
-      'driverAddress': '456 Elm St.',
-      'vehicleNumber': 'DEF456',
-    },
-    {
-      'driverName': 'Jane Doe',
-      'driverLicense': '654321',
-      'driverContact': '555-555-5555',
-      'driverAddress': '456 Elm St.',
-      'vehicleNumber': 'DEF456',
-    },
-    {
-      'driverName': 'Jane Doe',
-      'driverLicense': '654321',
-      'driverContact': '555-555-5555',
-      'driverAddress': '456 Elm St.',
-      'vehicleNumber': 'DEF456',
-    },
-  ];
+  // list of staff location
+  List<Marker> markers = [];
 
-  void deleteEmployee(int index) {
-    setState(() {
-      staffData.removeAt(index);
+  _getGeoPoints() {
+    FirebaseFirestore.instance
+        .collection('Staffs')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        // creating marker
+        final ambuStaff = Marker(
+          markerId: MarkerId(doc['UID'].toString()),
+          position: LatLng(doc['Location'].latitude, doc['Location'].longitude),
+          infoWindow: InfoWindow(
+            title: '${doc['Name']}',
+            snippet: '${doc['PhoneNumber']}',
+          ),
+          onTap: () {
+            // Show further details about the vehicle when tapped
+          },
+        );
+        // adding marker
+        markers.add(ambuStaff);
+      });
     });
-  }
-
-  void updateEmployee(int index) {
-    // TODO: Implement update employee functionality
-  }
-
-  void controlAccess(int index) {
-    // TODO: Implement access control functionality
   }
 
   @override
@@ -66,7 +49,7 @@ class _AmbuStaffsState extends State<AmbuStaffs> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-// getting user requests
+    // getting user requests
     final _requestStream = FirebaseFirestore.instance
         .collection('Staffs')
         .where('Category', isEqualTo: 'Ambulance Department')
@@ -74,6 +57,7 @@ class _AmbuStaffsState extends State<AmbuStaffs> {
 
     // list
     List staffData;
+    late bool staffStatus;
 
     return StreamBuilder<QuerySnapshot>(
         stream: _requestStream,
@@ -97,6 +81,16 @@ class _AmbuStaffsState extends State<AmbuStaffs> {
             return Scaffold(
                 body: SingleChildScrollView(
                     child: Column(children: [
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (BuildContext context) {
+                      // _getGeoPoints();
+                      // log('${markers}');
+                      return MyMap();
+                    }));
+                  },
+                  child: Text('Maps')),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 35.0, vertical: 50),
@@ -115,50 +109,56 @@ class _AmbuStaffsState extends State<AmbuStaffs> {
                           DataColumn(label: Text('Staff Email')),
                           DataColumn(label: Text('Active Status')),
                           DataColumn(label: Text('Access')),
-                          DataColumn(label: Text('Actions')),
                         ],
-                        rows: List<DataRow>.generate(
-                            staffData.length,
-                            (index) => DataRow(
-                                  cells: <DataCell>[
-                                    DataCell(SingleChildScrollView(
-                                        scrollDirection: Axis.vertical,
-                                        child: Text(staffData[index]['UID']))),
-                                    DataCell(SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Text(staffData[index]['Name']))),
-                                    DataCell(Text(staffData[index]
-                                            ['PhoneNumber']
-                                        .toString())),
-                                    DataCell(Text(staffData[index]['Email'])),
-                                    DataCell(Text(staffData[index]
-                                            ['ActiveStatus']
-                                        .toString())),
-                                    DataCell(Text(staffData[index]['HasAccess']
-                                        .toString())),
-                                    DataCell(
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(Icons.edit),
-                                            onPressed: () =>
-                                                updateEmployee(index),
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.security),
-                                            onPressed: () =>
-                                                controlAccess(index),
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.delete),
-                                            onPressed: () =>
-                                                deleteEmployee(index),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                )),
+                        rows: List<DataRow>.generate(staffData.length, (index) {
+                          // user's access value
+                          staffStatus = staffData[index]['HasAccess'];
+
+                          return DataRow(
+                            cells: <DataCell>[
+                              DataCell(SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  child: Text(staffData[index]['UID']))),
+                              DataCell(SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Text(staffData[index]['Name']))),
+                              DataCell(Text(
+                                  staffData[index]['PhoneNumber'].toString())),
+                              DataCell(Text(staffData[index]['Email'])),
+                              DataCell(Text(
+                                  staffData[index]['ActiveStatus'].toString())),
+                              // DataCell(Text(staffData[index]['HasAccess']
+                              //     .toString())),
+                              DataCell(
+                                Switch(
+                                    activeTrackColor: Colors.greenAccent,
+                                    inactiveTrackColor: Colors.redAccent,
+                                    activeColor: Colors.white,
+                                    value: staffStatus,
+                                    onChanged: (bool newValue) {
+                                      try {
+                                        MyCloudStoreBase obj = MyCloudStore();
+                                        obj
+                                            .userAccessUpdate(
+                                                'Staffs',
+                                                staffData[index]['documentID'],
+                                                'HasAccess',
+                                                newValue)
+                                            .then((value) =>
+                                                Message.flutterToast(context,
+                                                    "Access Modified"));
+                                      } catch (e) {
+                                        Message.flutterToast(
+                                            context, 'Error: $e ');
+                                      }
+                                      setState(() {
+                                        staffStatus = newValue;
+                                      });
+                                    }),
+                              ),
+                            ],
+                          );
+                        }),
                       ),
                     )),
               )

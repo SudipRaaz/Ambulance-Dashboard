@@ -15,4 +15,12 @@ abstract class MyCloudStoreBase {
 
   Future allocatePoliceStaff(
       String policeDeptDocID, Police_model allocationData);
+
+  // updating status
+  Future statusUpdate(String departmentName, String DocID, int caseID,
+      String field, String value);
+
+  // updating user access
+  Future userAccessUpdate(
+      String departmentName, String DocID, String field, bool value);
 }

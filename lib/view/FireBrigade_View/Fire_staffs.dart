@@ -1,5 +1,11 @@
+import 'dart:developer';
+
+import 'package:ambulance_dashboard/Controller/cloud_firestore.dart';
+import 'package:ambulance_dashboard/Controller/cloud_firestore_base.dart';
+import 'package:ambulance_dashboard/utilities/InfoDisp/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class FireStaffs extends StatefulWidget {
   const FireStaffs({super.key});
@@ -9,22 +15,6 @@ class FireStaffs extends StatefulWidget {
 }
 
 class _FireStaffsState extends State<FireStaffs> {
-  bool staffStatus = false;
-
-  void deleteEmployee(int index) {
-    // setState(() {
-    //   staffData.removeAt(index);
-    // });
-  }
-
-  void updateEmployee(int index) {
-    // TODO: Implement update employee functionality
-  }
-
-  void controlAccess(int index) {
-    // TODO: Implement access control functionality
-  }
-
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -38,6 +28,7 @@ class _FireStaffsState extends State<FireStaffs> {
 
     // list
     List staffData;
+    late bool staffStatus;
 
     return StreamBuilder<QuerySnapshot>(
         stream: _requestStream,
@@ -79,10 +70,11 @@ class _FireStaffsState extends State<FireStaffs> {
                           DataColumn(label: Text('Staff Email')),
                           DataColumn(label: Text('Active Status')),
                           DataColumn(label: Text('Access')),
-                          DataColumn(label: Text('Actions')),
                         ],
                         rows: List<DataRow>.generate(staffData.length, (index) {
+                          // user's access value
                           staffStatus = staffData[index]['HasAccess'];
+
                           return DataRow(
                             cells: <DataCell>[
                               DataCell(SingleChildScrollView(
@@ -105,46 +97,25 @@ class _FireStaffsState extends State<FireStaffs> {
                                     activeColor: Colors.white,
                                     value: staffStatus,
                                     onChanged: (bool newValue) {
+                                      try {
+                                        MyCloudStoreBase obj = MyCloudStore();
+                                        obj
+                                            .userAccessUpdate(
+                                                'Staffs',
+                                                staffData[index]['documentID'],
+                                                'HasAccess',
+                                                newValue)
+                                            .then((value) =>
+                                                Message.flutterToast(context,
+                                                    "Access Modified"));
+                                      } catch (e) {
+                                        Message.flutterToast(
+                                            context, 'Error: $e ');
+                                      }
                                       setState(() {
                                         staffStatus = newValue;
-
-                                        // getUserLocation();
-                                        // log('userLocation:  + ${userLocation?.latitude},  ${userLocation?.longitude}');
-
-                                        // if (userLocation?.latitude == null) {
-                                        //   staffStatus = false;
-                                        // } else {
-                                        // updating user data
-                                        // MyCloudStoreBase obj = MyCloudStore();
-                                        // obj.updateUserActiveStatus(
-                                        //     userID, staffStatus);
-                                        // obj.updateGeoLocation(
-                                        //     userID,
-                                        //     GeoPoint(userLocation!.latitude,
-                                        //         userLocation!.longitude));
                                       });
-                                      // });
-
-                                      // obj.updateGeoLocation(userID, location)
                                     }),
-                              ),
-                              DataCell(
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(Icons.edit),
-                                      onPressed: () => updateEmployee(index),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.security),
-                                      onPressed: () => controlAccess(index),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.delete),
-                                      onPressed: () => deleteEmployee(index),
-                                    ),
-                                  ],
-                                ),
                               ),
                             ],
                           );

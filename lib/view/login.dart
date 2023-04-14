@@ -141,12 +141,12 @@ class LoginPage extends StatelessWidget {
                       onPress: () {
                         if (_emailController.text.isEmpty ||
                             !isEmail(_emailController.text)) {
-                          Message.flushBarErrorMessage(
+                          Message.flutterToast(
                               context, "Enter a valid Email address");
 
                           // checking for valid password
                         } else if (_passwordController.text.length < 6) {
-                          Message.flushBarErrorMessage(
+                          Message.flutterToast(
                               context, "Password must be at least 6 digits");
                         } else {
                           // sign in using email and password

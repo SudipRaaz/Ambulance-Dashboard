@@ -1,3 +1,6 @@
+import 'package:ambulance_dashboard/Controller/cloud_firestore.dart';
+import 'package:ambulance_dashboard/Controller/cloud_firestore_base.dart';
+import 'package:ambulance_dashboard/utilities/InfoDisp/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -9,20 +12,6 @@ class PoliceStaffs extends StatefulWidget {
 }
 
 class _PoliceStaffsState extends State<PoliceStaffs> {
-  void deleteEmployee(int index) {
-    // setState(() {
-    //   staffData.removeAt(index);
-    // });
-  }
-
-  void updateEmployee(int index) {
-    // TODO: Implement update employee functionality
-  }
-
-  void controlAccess(int index) {
-    // TODO: Implement access control functionality
-  }
-
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -36,6 +25,7 @@ class _PoliceStaffsState extends State<PoliceStaffs> {
 
     // list
     List staffData;
+    late bool staffStatus;
 
     return StreamBuilder<QuerySnapshot>(
         stream: _requestStream,
@@ -77,50 +67,56 @@ class _PoliceStaffsState extends State<PoliceStaffs> {
                           DataColumn(label: Text('Staff Email')),
                           DataColumn(label: Text('Active Status')),
                           DataColumn(label: Text('Access')),
-                          DataColumn(label: Text('Actions')),
                         ],
-                        rows: List<DataRow>.generate(
-                            staffData.length,
-                            (index) => DataRow(
-                                  cells: <DataCell>[
-                                    DataCell(SingleChildScrollView(
-                                        scrollDirection: Axis.vertical,
-                                        child: Text(staffData[index]['UID']))),
-                                    DataCell(SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Text(staffData[index]['Name']))),
-                                    DataCell(Text(staffData[index]
-                                            ['PhoneNumber']
-                                        .toString())),
-                                    DataCell(Text(staffData[index]['Email'])),
-                                    DataCell(Text(staffData[index]
-                                            ['ActiveStatus']
-                                        .toString())),
-                                    DataCell(Text(staffData[index]['HasAccess']
-                                        .toString())),
-                                    DataCell(
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(Icons.edit),
-                                            onPressed: () =>
-                                                updateEmployee(index),
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.security),
-                                            onPressed: () =>
-                                                controlAccess(index),
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.delete),
-                                            onPressed: () =>
-                                                deleteEmployee(index),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                )),
+                        rows: List<DataRow>.generate(staffData.length, (index) {
+                          // user's access value
+                          staffStatus = staffData[index]['HasAccess'];
+
+                          return DataRow(
+                            cells: <DataCell>[
+                              DataCell(SingleChildScrollView(
+                                  scrollDirection: Axis.vertical,
+                                  child: Text(staffData[index]['UID']))),
+                              DataCell(SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Text(staffData[index]['Name']))),
+                              DataCell(Text(
+                                  staffData[index]['PhoneNumber'].toString())),
+                              DataCell(Text(staffData[index]['Email'])),
+                              DataCell(Text(
+                                  staffData[index]['ActiveStatus'].toString())),
+                              // DataCell(Text(staffData[index]['HasAccess']
+                              //     .toString())),
+                              DataCell(
+                                Switch(
+                                    activeTrackColor: Colors.greenAccent,
+                                    inactiveTrackColor: Colors.redAccent,
+                                    activeColor: Colors.white,
+                                    value: staffStatus,
+                                    onChanged: (bool newValue) {
+                                      try {
+                                        MyCloudStoreBase obj = MyCloudStore();
+                                        obj
+                                            .userAccessUpdate(
+                                                'Staffs',
+                                                staffData[index]['documentID'],
+                                                'HasAccess',
+                                                newValue)
+                                            .then((value) =>
+                                                Message.flutterToast(context,
+                                                    "Access Modified"));
+                                      } catch (e) {
+                                        Message.flutterToast(
+                                            context, 'Error: $e ');
+                                      }
+                                      setState(() {
+                                        staffStatus = newValue;
+                                      });
+                                    }),
+                              ),
+                            ],
+                          );
+                        }),
                       ),
                     )),
               )
