@@ -1,5 +1,6 @@
 import 'package:ambulance_dashboard/ambulance_layout.dart';
 import 'package:ambulance_dashboard/fire_layout.dart';
+import 'package:ambulance_dashboard/police_layout.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../Controller/authentication_functions.dart';
@@ -17,6 +18,7 @@ class Delegator extends StatelessWidget {
 
     return AmbulanceLayout();
     // return FireBrigadeLayout();
+    // return PoliceLayout();
 
     // return StreamBuilder(
     //     stream: findDashboard,

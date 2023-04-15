@@ -148,7 +148,6 @@ class _MyMapState extends State<MyMap> with WidgetsBindingObserver {
                 body: Stack(children: [
               GoogleMap(
                 mapType: MapType.normal,
-                myLocationEnabled: true,
                 markers: Set<Marker>.of(staffMarkers),
                 initialCameraPosition: const CameraPosition(
                     target: LatLng(

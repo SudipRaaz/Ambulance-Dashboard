@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class AmbulanceStaffTracking extends StatefulWidget {
-  AmbulanceStaffTracking({super.key});
+class FireBrigadeStaffTracking extends StatefulWidget {
+  FireBrigadeStaffTracking({super.key});
 
   @override
-  State<AmbulanceStaffTracking> createState() => _AmbulanceStaffTrackingState();
+  State<FireBrigadeStaffTracking> createState() =>
+      _FireBrigadeStaffTrackingState();
 }
 
-class _AmbulanceStaffTrackingState extends State<AmbulanceStaffTracking>
+class _FireBrigadeStaffTrackingState extends State<FireBrigadeStaffTracking>
     with WidgetsBindingObserver {
   late GoogleMapController mapController;
 
@@ -26,8 +27,8 @@ class _AmbulanceStaffTrackingState extends State<AmbulanceStaffTracking>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     // call your data fetching methods here
-    fetchStaffData();
-    fetchRequestData();
+    fetchStreamData();
+    fetchFutureData();
     _loadIcons();
   }
 
@@ -49,11 +50,10 @@ class _AmbulanceStaffTrackingState extends State<AmbulanceStaffTracking>
     super.dispose();
   }
 
-  // fetch the user reqeust's location
-  Future<void> fetchRequestData() async {
+  Future<void> fetchFutureData() async {
     // fetch your data using FutureBuilder here
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('AmbulanceDepartment')
+        .collection('FireBrigadeDepartment')
         .where('Status', isEqualTo: 'Waiting')
         .get();
     List<Marker> markers = [];
@@ -76,10 +76,10 @@ class _AmbulanceStaffTrackingState extends State<AmbulanceStaffTracking>
     });
   }
 
-  void fetchStaffData() async {
+  void fetchStreamData() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('Staffs')
-        .where('Category', isEqualTo: 'Ambulance Department')
+        .where('Category', isEqualTo: 'FireBrigade Department')
         .get();
     List<Marker> markers = [];
     querySnapshot.docs.forEach((doc) {

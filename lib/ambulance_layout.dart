@@ -1,4 +1,6 @@
 import 'package:ambulance_dashboard/Controller/authentication_functions.dart';
+import 'package:ambulance_dashboard/utilities/constant/functions.dart';
+import 'package:ambulance_dashboard/utilities/constant/widgets.dart';
 import 'package:ambulance_dashboard/utilities/route/routes.dart';
 import 'package:ambulance_dashboard/view/Ambulance_VIew/Ambu_Staff_Map.dart';
 import 'package:flutter/material.dart';
@@ -17,36 +19,51 @@ class AmbulanceLayout extends StatefulWidget {
 class _AmbulanceLayoutState extends State<AmbulanceLayout> {
   @override
   Widget build(BuildContext context) {
+    // media height and width
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+
     List<Widget> pages = MyPagesList().ambulancePages;
     return Consumer<TabManager>(builder: (context, tabManager, child) {
       return Scaffold(
         appBar: AppBar(
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color.fromARGB(255, 51, 231, 255),
+                  Colors.blue,
+                  Color.fromARGB(255, 51, 231, 255)
+                ],
+              ),
+            ),
+          ),
           title: const Text("Ambulance Dashboard"),
           centerTitle: true,
-          actions: [
-            ElevatedButton(
-                onPressed: () {
-                  Authentication().signOut();
-                  Navigator.pushReplacementNamed(context, RouteNames.loginPage);
-                },
-                child: const Text(" LogOut "))
-          ],
         ),
         body: Row(
           children: <Widget>[
             NavigationRail(
-              backgroundColor: Colors.amber,
+              backgroundColor: Colors.lightBlue.shade100,
               selectedIndex: tabManager.selectedIndex,
               onDestinationSelected: (int index) {
-                setState(() {
-                  tabManager.goToTab(index);
-                });
+                if (index == 4) {
+                  MyFunctions().logout(context);
+                } else {
+                  setState(() {
+                    tabManager.goToTab(index);
+                  });
+                }
               },
               labelType: NavigationRailLabelType.all,
               destinations: const [
                 NavigationRailDestination(
                   icon: Icon(Icons.add),
-                  label: Text('New Request'),
+                  label: Text(
+                    'New Request',
+                  ),
                 ),
                 NavigationRailDestination(
                   icon: Icon(Icons.inbox),
@@ -59,6 +76,13 @@ class _AmbulanceLayoutState extends State<AmbulanceLayout> {
                 NavigationRailDestination(
                   icon: Icon(Icons.group_rounded),
                   label: Text('Manage Staff'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(
+                    Icons.logout,
+                    color: Colors.red,
+                  ),
+                  label: Text('Log Out'),
                 ),
               ],
             ),

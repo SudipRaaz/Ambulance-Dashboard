@@ -21,7 +21,7 @@ class PoliceHistory extends StatelessWidget {
 
     // getting user requests
     final _requestStream = FirebaseFirestore.instance
-        .collection('AmbulanceDepartment')
+        .collection('PoliceDepartment')
         .where('Status', isEqualTo: 'Completed')
         .snapshots();
 
