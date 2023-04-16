@@ -1,12 +1,14 @@
 import 'package:ambulance_dashboard/Controller/cloud_firestore.dart';
 import 'package:ambulance_dashboard/Controller/cloud_firestore_base.dart';
+import 'package:ambulance_dashboard/components/gradientButton.dart';
+import 'package:ambulance_dashboard/model/caseTrackingModel.dart';
 import 'package:ambulance_dashboard/utilities/InfoDisp/message.dart';
 import 'package:ambulance_dashboard/utilities/constant/widgets.dart';
+import 'package:ambulance_dashboard/utilities/route/routes.dart';
 import 'package:ambulance_dashboard/view/Ambulance_VIew/Ambu_Staff_Map.dart';
+import 'package:ambulance_dashboard/view/caseTracking_Map.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-typedef MyCallback = Function(String option, String id, GeoPoint location);
 
 // ignore: must_be_immutable
 class AmbuInProgress extends StatelessWidget {
@@ -151,14 +153,16 @@ class AmbuInProgress extends StatelessWidget {
                         '''
 Status: ${newRequests[index]['Status']}
 Case ID: ${newRequests[index]['caseID']}
+
 Requester ID: ${newRequests[index]['uid']}
 Requester Name: ${newRequests[index]['name']}
 Contact: ${newRequests[index]['phoneNumber']}
+Message: ${newRequests[index]['message']}
+Location: ${customerLocation.latitude}, ${customerLocation.longitude} 
+
 Requested At
     Date: ${dateTime.year}/${dateTime.month}/${dateTime.day}
     Time: ${dateTime.hour}:${dateTime.minute}:${dateTime.second}
-Location: ${customerLocation.latitude}, ${customerLocation.longitude} 
-Message: ${newRequests[index]['message']}
 
 ''',
                         textAlign: TextAlign.start,
@@ -189,25 +193,78 @@ Location:
                       ),
                       const Text("Reponse Message:"),
                       Text(respondedMessage),
-                      addVerticalSpace(20),
-                      ElevatedButton(
-                          onPressed: () {
-                            try {
-                              MyCloudStoreBase obj = MyCloudStore();
-                              obj
-                                  .statusUpdate(
-                                      'AmbulanceDepartment',
-                                      newRequests[index]['documentID'],
-                                      newRequests[index]['caseID'],
-                                      'Status',
-                                      'Completed')
-                                  .then((value) => Message.flutterToast(
-                                      context, "Marked as Completed"));
-                            } catch (e) {
-                              Message.flutterToast(context, 'Error ');
-                            }
-                          },
-                          child: const Text('Mark as Completed')),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(30, 30, 0, 0),
+                            child: MyGradientButton(
+                              text: 'View On Map',
+                              onPress: () {
+                                GeoPoint userLocation = GeoPoint(
+                                    customerLocation.latitude,
+                                    customerLocation.longitude);
+                                GeoPoint staffLocation = GeoPoint(
+                                    assignedStaffLocation.latitude,
+                                    assignedStaffLocation.longitude);
+                                CaseTracking_Model caseTrackingData =
+                                    CaseTracking_Model(
+                                        staffID: newRequests[index]
+                                            ['ambulanceAllotedID'],
+                                        userID: newRequests[index]['uid'],
+                                        name: newRequests[index]['name'],
+                                        phoneNumber: newRequests[index]
+                                            ['phoneNumber'],
+                                        userLocation: userLocation,
+                                        staffLocation: staffLocation);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            CaseTracking_Map(
+                                                caseTracking:
+                                                    caseTrackingData)));
+                              },
+                              iconData: (Icons.location_pin),
+                              gradientColor: const LinearGradient(colors: [
+                                Color.fromARGB(255, 22, 228, 255),
+                                Colors.blue,
+                                Colors.blue,
+                                Color.fromARGB(255, 22, 228, 255),
+                              ]),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(30, 30, 0, 0),
+                            child: MyGradientButton(
+                              text: '   Mark As Completed',
+                              onPress: () {
+                                try {
+                                  MyCloudStoreBase obj = MyCloudStore();
+                                  obj
+                                      .statusUpdate(
+                                          'AmbulanceDepartment',
+                                          newRequests[index]['documentID'],
+                                          newRequests[index]['caseID'],
+                                          'Status',
+                                          'Completed')
+                                      .then((value) => Message.flutterToast(
+                                          context, "Marked as Completed"));
+                                } catch (e) {
+                                  Message.flutterToast(context, 'Error ');
+                                }
+                              },
+                              iconData: (Icons.done),
+                              gradientColor: const LinearGradient(colors: [
+                                Color.fromARGB(255, 22, 228, 255),
+                                Colors.blue,
+                                Colors.blue,
+                                Color.fromARGB(255, 22, 228, 255),
+                              ]),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                   const Text("")

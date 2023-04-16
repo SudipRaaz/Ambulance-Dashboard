@@ -15,4 +15,7 @@ class RouteNames {
   static const String ambulanceStaffTracking = "Ambulance staff tracking";
   static const String fireBrigadeStaffTracking = "FireBrigade staff tracking";
   static const String policeStaffTracking = "Police staff tracking";
+
+  // case tracking
+  static const String caseTrackingMap = "case Tracking on Map";
 }

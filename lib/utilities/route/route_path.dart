@@ -3,6 +3,7 @@ import 'package:ambulance_dashboard/utilities/route/routes.dart';
 import 'package:ambulance_dashboard/view/Ambulance_VIew/Ambu_Staff_Map.dart';
 import 'package:ambulance_dashboard/view/FireBrigade_View/Fire_Staff_Map.dart';
 import 'package:ambulance_dashboard/view/Police_View/Police_Staff_Map.dart';
+import 'package:ambulance_dashboard/view/caseTracking_Map.dart';
 import 'package:ambulance_dashboard/view/history_page.dart';
 import 'package:ambulance_dashboard/view/inprogress_page.dart';
 import 'package:ambulance_dashboard/view/login.dart';
@@ -20,6 +21,10 @@ class Routes {
         return MaterialPageRoute(builder: (context) {
           return Delegator();
         });
+      // case RouteNames.caseTrackingMap:
+      //   return MaterialPageRoute(builder: (context) {
+      //     return CaseTracking_Map();
+      //   });
 
       case RouteNames.ambulanceStaffTracking:
         return MaterialPageRoute(builder: (context) {

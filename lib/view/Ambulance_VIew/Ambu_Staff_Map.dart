@@ -10,8 +10,7 @@ class AmbulanceStaffTracking extends StatefulWidget {
   State<AmbulanceStaffTracking> createState() => _AmbulanceStaffTrackingState();
 }
 
-class _AmbulanceStaffTrackingState extends State<AmbulanceStaffTracking>
-    with WidgetsBindingObserver {
+class _AmbulanceStaffTrackingState extends State<AmbulanceStaffTracking> {
   late GoogleMapController mapController;
 
   // store all the map markers
@@ -24,7 +23,6 @@ class _AmbulanceStaffTrackingState extends State<AmbulanceStaffTracking>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     // call your data fetching methods here
     fetchStaffData();
     fetchRequestData();
@@ -41,12 +39,6 @@ class _AmbulanceStaffTrackingState extends State<AmbulanceStaffTracking>
       const ImageConfiguration(size: Size(48, 48)),
       'assets/patient_marker.png',
     );
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
   }
 
   // fetch the user reqeust's location
@@ -84,7 +76,7 @@ class _AmbulanceStaffTrackingState extends State<AmbulanceStaffTracking>
     List<Marker> markers = [];
     querySnapshot.docs.forEach((doc) {
       Marker marker = Marker(
-        // icon: _ambulanceIcon!,
+        // icon: _ambulanceIcon?,
         markerId: MarkerId(doc['UID'].toString()),
         position: LatLng(doc['Location'].latitude, doc['Location'].longitude),
         infoWindow: InfoWindow(
