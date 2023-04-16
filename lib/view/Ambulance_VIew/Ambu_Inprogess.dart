@@ -222,8 +222,9 @@ Location:
                                     MaterialPageRoute(
                                         builder: (BuildContext context) =>
                                             CaseTracking_Map(
-                                                caseTracking:
-                                                    caseTrackingData)));
+                                              caseTracking: caseTrackingData,
+                                              iconName: 'ambulance',
+                                            )));
                               },
                               iconData: (Icons.location_pin),
                               gradientColor: const LinearGradient(colors: [

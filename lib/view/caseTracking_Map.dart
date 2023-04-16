@@ -6,7 +6,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CaseTracking_Map extends StatefulWidget {
   CaseTracking_Model caseTracking;
-  CaseTracking_Map({required this.caseTracking, super.key});
+  String iconName;
+  CaseTracking_Map(
+      {required this.caseTracking, required this.iconName, super.key});
 
   @override
   State<CaseTracking_Map> createState() => _CaseTracking_MapState();
@@ -19,15 +21,20 @@ class _CaseTracking_MapState extends State<CaseTracking_Map> {
   // store all the map markers
   List<Marker> MapMarkers = [];
   late CaseTracking_Model caseTrackingData;
+  late String iconName;
 
   // marker icons
-  BitmapDescriptor? _ambulanceIcon;
   BitmapDescriptor? _patientIcon;
+  BitmapDescriptor? _flagIcon;
+  BitmapDescriptor? _ambulanceIcon;
+  BitmapDescriptor? _fireBrigadeIcon;
+  BitmapDescriptor? _policeIcon;
 
   @override
   void initState() {
     super.initState();
     caseTrackingData = widget.caseTracking;
+    iconName = widget.iconName;
     // call your data fetching methods here
     _loadIcons();
     fetchFutureData();
@@ -43,6 +50,34 @@ class _CaseTracking_MapState extends State<CaseTracking_Map> {
       const ImageConfiguration(size: Size(48, 48)),
       'assets/patient_marker.png',
     );
+
+    _flagIcon = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(size: Size(48, 48)),
+      'assets/flag.png',
+    );
+
+    _fireBrigadeIcon = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(size: Size(48, 48)),
+      'assets/fireBrigade_marker.png',
+    );
+
+    _policeIcon = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(size: Size(48, 48)),
+      'assets/police_marker.png',
+    );
+  }
+
+  BitmapDescriptor? getIcon(String iconName) {
+    switch (iconName) {
+      case 'ambulance':
+        return _ambulanceIcon;
+      case 'fireBrigade':
+        return _fireBrigadeIcon;
+      case 'police':
+        return _policeIcon;
+      default:
+        return BitmapDescriptor.defaultMarker;
+    }
   }
 
   Future<void> fetchFutureData() async {
@@ -51,10 +86,10 @@ class _CaseTracking_MapState extends State<CaseTracking_Map> {
         .collection('Staffs')
         .doc(caseTrackingData.staffID)
         .get();
-    log('${doc['Location'].latitude}, ${doc['Location'].longitude}');
+    log('${doc['Location'].latitude}, ${doc['Location'].longitude}, location map icon: ${getIcon(iconName)}');
     List<Marker> markers = [];
     Marker marker = Marker(
-      icon: _ambulanceIcon ?? BitmapDescriptor.defaultMarker,
+      icon: getIcon(iconName)!,
       markerId: MarkerId('staff Currnet location'),
       position: LatLng(doc['Location'].latitude, doc['Location'].longitude),
       infoWindow: InfoWindow(
@@ -97,32 +132,6 @@ class _CaseTracking_MapState extends State<CaseTracking_Map> {
     });
   }
 
-  void fetchStreamData() async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('Staffs')
-        .where('Category', isEqualTo: 'Police Department')
-        .get();
-    List<Marker> markers = [];
-    querySnapshot.docs.forEach((doc) {
-      Marker marker = Marker(
-        // icon: _ambulanceIcon!,
-        markerId: MarkerId(doc['UID'].toString()),
-        position: LatLng(doc['Location'].latitude, doc['Location'].longitude),
-        infoWindow: InfoWindow(
-          title: 'Name: ${doc['Name']}',
-          snippet:
-              ' Phone Number: ${doc['PhoneNumber']}\n   UID: ${doc['UID']}',
-        ),
-      );
-      markers.add(marker);
-    });
-    // add your future markers to the list of staffMarkers
-    setState(() {
-      MapMarkers.addAll(markers);
-      log('Marker length: ${MapMarkers.length}');
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -132,7 +141,7 @@ class _CaseTracking_MapState extends State<CaseTracking_Map> {
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           title: const Text('Back'),
-          backgroundColor: Color.fromARGB(81, 33, 149, 243),
+          backgroundColor: const Color.fromARGB(81, 33, 149, 243),
           elevation: 0,
         ),
         body: SizedBox(
