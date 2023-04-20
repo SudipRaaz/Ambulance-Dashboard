@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:ambulance_dashboard/model/caseTrackingModel.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -86,11 +85,10 @@ class _CaseTracking_MapState extends State<CaseTracking_Map> {
         .collection('Staffs')
         .doc(caseTrackingData.staffID)
         .get();
-    log('${doc['Location'].latitude}, ${doc['Location'].longitude}, location map icon: ${getIcon(iconName)}');
     List<Marker> markers = [];
     Marker marker = Marker(
       icon: getIcon(iconName)!,
-      markerId: MarkerId('staff Currnet location'),
+      markerId: MarkerId('staff Current location'),
       position: LatLng(doc['Location'].latitude, doc['Location'].longitude),
       infoWindow: InfoWindow(
         title: 'Name: ${doc['Name']}',
@@ -102,7 +100,7 @@ class _CaseTracking_MapState extends State<CaseTracking_Map> {
 
     // user's requested location
     markers.add(Marker(
-      icon: _patientIcon ?? BitmapDescriptor.defaultMarker,
+      icon: _flagIcon ?? BitmapDescriptor.defaultMarker,
       markerId: MarkerId(caseTrackingData.userID),
       position: LatLng(caseTrackingData.userLocation.latitude,
           caseTrackingData.userLocation.longitude),
@@ -119,16 +117,14 @@ class _CaseTracking_MapState extends State<CaseTracking_Map> {
       markerId: MarkerId(caseTrackingData.staffID),
       position: LatLng(caseTrackingData.staffLocation.latitude,
           caseTrackingData.staffLocation.longitude),
-      infoWindow: InfoWindow(
+      infoWindow: const InfoWindow(
         title: 'Route Begins Here',
-        // snippet: ' Phone Number: ${caseTrackingData.phoneNumber}\n   UID: ${caseTrackingData.userID}',
       ),
     ));
 
     // add your future markers to the list of staffMarkers
     setState(() {
       MapMarkers.addAll(markers);
-      log(MapMarkers.length.toString());
     });
   }
 
@@ -150,10 +146,10 @@ class _CaseTracking_MapState extends State<CaseTracking_Map> {
           child: GoogleMap(
             mapType: MapType.normal,
             markers: Set<Marker>.of(MapMarkers),
-            initialCameraPosition: const CameraPosition(
+            initialCameraPosition: CameraPosition(
                 target: LatLng(
-                  27.6683,
-                  85.3205,
+                  caseTrackingData.userLocation.latitude,
+                  caseTrackingData.userLocation.longitude,
                 ),
                 zoom: 12),
           ),

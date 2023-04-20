@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:ambulance_dashboard/Controller/cloud_firestore.dart';
 import 'package:ambulance_dashboard/Controller/cloud_firestore_base.dart';
 import 'package:ambulance_dashboard/components/gradientButton.dart';

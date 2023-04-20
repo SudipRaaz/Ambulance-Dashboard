@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:ambulance_dashboard/utilities/InfoDisp/message.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -89,7 +88,7 @@ class _PoliceStaffTrackingState extends State<PoliceStaffTracking>
         markerId: MarkerId(doc['UID'].toString()),
         position: LatLng(doc['Location'].latitude, doc['Location'].longitude),
         infoWindow: InfoWindow(
-          title: 'Name: ${doc['Name']}',
+          title: 'Staff: ${doc['Name']}',
           snippet:
               ' Phone Number: ${doc['PhoneNumber']}\n   UID: ${doc['UID']}',
         ),

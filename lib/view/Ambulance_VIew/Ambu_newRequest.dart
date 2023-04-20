@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:ambulance_dashboard/Controller/cloud_firestore.dart';
 import 'package:ambulance_dashboard/Controller/cloud_firestore_base.dart';
 import 'package:ambulance_dashboard/components/available_staffs.dart';
@@ -159,7 +157,6 @@ Message: ${newRequests[index]['message']}
                               selectedOption = option;
                               staffUID = id;
                               staffLocation = location;
-                              log('returned : $option, $id, $location');
                             },
                             departmentCategory: 'Ambulance Department',
                           ),
@@ -207,7 +204,6 @@ Message: ${newRequests[index]['message']}
                                     context, 'Could not retrive staff UID');
                               }
                             }
-                            log('${staffUID}, ${selectedOption}, ${staffLocation}');
                           },
                           child: const Text('Confirm Change')),
                     ],

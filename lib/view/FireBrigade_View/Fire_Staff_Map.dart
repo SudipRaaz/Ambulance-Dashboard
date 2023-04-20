@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -88,7 +87,7 @@ class _FireBrigadeStaffTrackingState extends State<FireBrigadeStaffTracking>
         markerId: MarkerId(doc['UID'].toString()),
         position: LatLng(doc['Location'].latitude, doc['Location'].longitude),
         infoWindow: InfoWindow(
-          title: 'Name: ${doc['Name']}',
+          title: 'Staff: ${doc['Name']}',
           snippet:
               ' Phone Number: ${doc['PhoneNumber']}\n   UID: ${doc['UID']}',
         ),
@@ -98,7 +97,6 @@ class _FireBrigadeStaffTrackingState extends State<FireBrigadeStaffTracking>
     // add your future markers to the list of staffMarkers
     setState(() {
       staffMarkers.addAll(markers);
-      log('Marker length: ${staffMarkers.length}');
     });
   }
 

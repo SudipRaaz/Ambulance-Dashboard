@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:ambulance_dashboard/Controller/cloud_firestore.dart';
 import 'package:ambulance_dashboard/Controller/cloud_firestore_base.dart';
 import 'package:ambulance_dashboard/components/available_staffs.dart';
-import 'package:ambulance_dashboard/model/allocatingAmbulance.dart';
+import 'package:ambulance_dashboard/model/police_model.dart';
 import 'package:ambulance_dashboard/utilities/InfoDisp/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -157,7 +155,6 @@ Message: ${newRequests[index]['message']}
                               selectedOption = option;
                               staffUID = id;
                               staffLocation = location;
-                              log('returned : $option, $id, $location');
                             },
                             departmentCategory: 'Police Department',
                           ),
@@ -179,33 +176,33 @@ Message: ${newRequests[index]['message']}
                               Timestamp timestamp = Timestamp.now();
                               DateTime allotedAt = timestamp.toDate();
                               if (staffUID != null) {
-                                final ambulanceAllocationData =
-                                    AllocatingAmbulance(
-                                        status: 'In Progress',
-                                        caseID: newRequests[index]['caseID'],
-                                        allotedAt: allotedAt,
-                                        ambulanceAllotedId: staffUID!,
-                                        ambulanceLocation: staffLocation!,
-                                        ambulanceServiceAlloted: true,
-                                        responseMessage:
-                                            responseMessageController.text);
+                                final policeAllocationData = Police_model(
+                                    status: 'In Progress',
+                                    caseID: newRequests[index]['caseID'],
+                                    allotedAt: allotedAt,
+                                    policeAllotedId: staffUID!,
+                                    policeLocation: staffLocation!,
+                                    policeServiceAlloted: true,
+                                    responseMessage:
+                                        responseMessageController.text);
                                 MyCloudStoreBase obj = MyCloudStore();
-                                obj
-                                    .allocateAmbulanceStaff(
-                                        newRequests[index]['documentID'],
-                                        ambulanceAllocationData)
-                                    .onError((error, stackTrace) =>
-                                        Message.flutterToast(
-                                            context, stackTrace.toString()))
-                                    .then((value) => Message.flutterToast(
-                                        context,
-                                        'Staff Assigned Successfully'));
+                                try {
+                                  obj
+                                      .allocatePoliceStaff(
+                                          newRequests[index]['documentID'],
+                                          policeAllocationData)
+                                      .then((value) => Message.flutterToast(
+                                          context,
+                                          'Staff Assigned Successfully'));
+                                } catch (e) {
+                                  Message.flutterToast(
+                                      context, 'Erorr: Assigning Staff');
+                                }
                               } else {
                                 Message.flutterToast(
                                     context, 'Could not retrive staff UID');
                               }
                             }
-                            log('${staffUID}, ${selectedOption}, ${staffLocation}');
                           },
                           child: const Text('Confirm Change')),
                     ],
