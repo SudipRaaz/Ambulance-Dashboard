@@ -3,6 +3,7 @@ import 'package:ambulance_dashboard/utilities/route/routes.dart';
 import 'package:ambulance_dashboard/view/Ambulance_VIew/Ambu_Staff_Map.dart';
 import 'package:ambulance_dashboard/view/FireBrigade_View/Fire_Staff_Map.dart';
 import 'package:ambulance_dashboard/view/Police_View/Police_Staff_Map.dart';
+import 'package:ambulance_dashboard/view/login.dart';
 import 'package:flutter/material.dart';
 
 class Routes {
@@ -26,6 +27,11 @@ class Routes {
       case RouteNames.policeStaffTracking:
         return MaterialPageRoute(builder: (context) {
           return PoliceStaffTracking();
+        });
+
+      case RouteNames.loginPage:
+        return MaterialPageRoute(builder: (context) {
+          return LoginPage();
         });
 
       default:

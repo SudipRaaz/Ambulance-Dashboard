@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -27,7 +25,7 @@ class _PoliceStaffTrackingState extends State<PoliceStaffTracking>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     // call your data fetching methods here
-    fetchStreamData();
+    fetchFutureStaffData();
     fetchFutureData();
     _loadIcons();
   }
@@ -35,12 +33,12 @@ class _PoliceStaffTrackingState extends State<PoliceStaffTracking>
   void _loadIcons() async {
     _ambulanceIcon = await BitmapDescriptor.fromAssetImage(
       const ImageConfiguration(size: Size(48, 48)),
-      'assets/ambulance_marker.png',
+      'assets/police_marker.png',
     );
 
     _patientIcon = await BitmapDescriptor.fromAssetImage(
       const ImageConfiguration(size: Size(48, 48)),
-      'assets/patient_marker.png',
+      'assets/flag.png',
     );
   }
 
@@ -76,7 +74,7 @@ class _PoliceStaffTrackingState extends State<PoliceStaffTracking>
     });
   }
 
-  void fetchStreamData() async {
+  void fetchFutureStaffData() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('Staffs')
         .where('Category', isEqualTo: 'Police Department')
@@ -98,7 +96,6 @@ class _PoliceStaffTrackingState extends State<PoliceStaffTracking>
     // add your future markers to the list of staffMarkers
     setState(() {
       staffMarkers.addAll(markers);
-      log('Marker length: ${staffMarkers.length}');
     });
   }
 
