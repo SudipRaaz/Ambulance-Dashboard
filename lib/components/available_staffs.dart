@@ -76,7 +76,7 @@ class Get_AvailableStaffState extends State<GetAvailableStaff> {
                             newValue, staffID!, StaffLocation!);
                       }
                     }
-                    log('from available staff class : ${availableStaff[i]['Location']},  ${availableStaff[i]['UID']}}');
+                    // log('from available staff class : ${availableStaff[i]['Location']},  ${availableStaff[i]['UID']}}');
                   }
                 }
               },

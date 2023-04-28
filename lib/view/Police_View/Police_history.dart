@@ -184,9 +184,6 @@ Location:
                       const Text("Reponse Message:"),
                       Text(respondedMessage),
                       addVerticalSpace(20),
-                      ElevatedButton(
-                          onPressed: () {},
-                          child: const Text('Mark as Completed')),
                     ],
                   ),
                   const Text("")
